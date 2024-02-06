@@ -1,0 +1,5 @@
+paramfinder/results
+build
+.idea/
+__pycache__/
+paramfinder.egg-info
