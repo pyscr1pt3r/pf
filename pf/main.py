@@ -6,7 +6,7 @@ from urllib.parse import urlparse, parse_qs, urlencode
 
 
 extensions = [".jpg", ".jpeg", ".png", ".gif", ".pdf", ".svg", ".json", ".css", ".js", ".webp", ".woff", ".woff2", ".eot", ".ttf", ".otf", ".mp4", ".txt"]
-j_params = ['utm_campaign']
+j_params = ['utm_campaign', 'utm_source', 'utm_medium']
 
 p = argparse.ArgumentParser(description="Replace URL values with keyword")
 p.add_argument("-p", "--placeholder", help="placeholder for parameter values", default="FUZZ")
@@ -34,9 +34,18 @@ def clean_url(url):
     return parsed.geturl()
 
 
-def remove_junk_params(url):
+def clean_params(url):
+    parsed = urlparse(url)
+    query_params = parse_qs(parsed.query)
+    cleaned_params = {}
+    for k in query_params.keys():
+        if k in j_params:
+            continue
+        cleaned_params[k] = args.placeholder
+    cleaned_query = urlencode(cleaned_params, doseq=True)
+    url = parsed._replace(query=cleaned_query).geturl()
 
-    ...
+    return url if has_params(url) else None
 
 
 def main():
@@ -50,11 +59,10 @@ def main():
             continue
         if has_extension(url, extensions):
             continue
-        parsed = urlparse(url)
-        query_params = parse_qs(parsed.query)
-        cleaned_params = {key: args.placeholder for key in query_params}
-        cleaned_query = urlencode(cleaned_params, doseq=True)
-        url = parsed._replace(query=cleaned_query).geturl()
+        url = clean_url(url)
+        url = clean_params(url)
+        if not url:
+            continue
         urls.add(url)
 
     for url in urls:
