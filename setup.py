@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='paramfinder',
+    name='pf',
     version='0.0.1',
     packages=find_packages(),
     install_requires=[
@@ -11,14 +11,14 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'paramfinder = paramfinder.main:main'
+            'pf = pf.main:main'
         ]
     },
-    url='https://github.com/cyberduck404/paramfinder',
+    url='https://github.com/pyscr1pt3r/pf',
     license='MIT',
-    author='cyberduck404',
+    author='pyscr1pt3r',
     author_email='',
-    description='Dig parameters from wayback machine',
+    description='',
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown'
 )

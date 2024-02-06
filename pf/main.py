@@ -35,6 +35,7 @@ def has_extension(url, extensions):
 
     return extension in extensions
 
+
 def clean_url(url):
     parsed = urlparse(url)
 
@@ -42,6 +43,7 @@ def clean_url(url):
         parsed = parsed._replace(netloc=parsed.netloc.rsplit(":", 1)[0])
 
     return parsed.geturl()
+
 
 def main():
     if not args.domain and not args.list:
