@@ -31,6 +31,10 @@ def has_extension(url, extensions):
     return extension in extensions
 
 
+def has_params(url):
+    return '?' in url
+
+
 def clean_url(url):
     parsed = urlparse(url)
 
@@ -48,13 +52,17 @@ def main():
     urls = set()
     for line in sys.stdin.readlines():
         url = line.strip('\r').strip('\n')
-        if not has_extension(url, extensions):
-            parsed_url = urlparse(url)
-            query_params = parse_qs(parsed_url.query)
-            cleaned_params = {key: args.placeholder for key in query_params}
-            cleaned_query = urlencode(cleaned_params, doseq=True)
-            url = parsed_url._replace(query=cleaned_query).geturl()
-            urls.add(url)
+        if not has_params(url):
+            continue
+        if has_extension(url, extensions):
+            continue
+        parsed_url = urlparse(url)
+        query_params = parse_qs(parsed_url.query)
+        cleaned_params = {key: args.placeholder for key in query_params}
+        cleaned_query = urlencode(cleaned_params, doseq=True)
+        url = parsed_url._replace(query=cleaned_query).geturl()
+        urls.add(url)
+
     for url in urls:
         sys.stdout.write(f'{url}\n')
 
