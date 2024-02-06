@@ -1,12 +1,13 @@
 #!/usr/bin/python3
 import os
 import sys
+import html
 import argparse
-from urllib.parse import urlparse, parse_qs, urlencode
+from urllib.parse import urlparse, parse_qs, urlencode, unquote
 
 
 extensions = [".jpg", ".jpeg", ".png", ".gif", ".pdf", ".svg", ".json", ".css", ".js", ".webp", ".woff", ".woff2", ".eot", ".ttf", ".otf", ".mp4", ".txt"]
-j_params = ['utm_campaign', 'utm_source', 'utm_medium']
+j_params = ['utm_campaign', 'utm_source', 'utm_medium', 'utm_content', 'utm_term']
 
 p = argparse.ArgumentParser(description="Replace URL values with keyword")
 p.add_argument("-p", "--placeholder", help="placeholder for parameter values", default="FUZZ")
@@ -26,8 +27,12 @@ def has_params(url):
 
 
 def clean_url(url):
+    # decode
+    html.unescape(unquote(url))
+
     parsed = urlparse(url)
 
+    # handle port
     if (parsed.port == 80 and parsed.scheme == "http") or (parsed.port == 443 and parsed.scheme == "https"):
         parsed = parsed._replace(netloc=parsed.netloc.rsplit(":", 1)[0])
 
