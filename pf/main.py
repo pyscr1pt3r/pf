@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 import os
+import re
 import sys
 import html
 import argparse
@@ -44,10 +45,13 @@ def clean_params(url):
     query_params = parse_qs(parsed.query)
     cleaned_params = {}
     for k in query_params.keys():
+        if not re.match(r'^[0-9a-zA-Z_\[\]-]+$', k):
+            continue
         if k in j_params:
             continue
         cleaned_params[k] = args.placeholder
     cleaned_query = urlencode(cleaned_params, doseq=True)
+    # cleaned_query = '&'.join([f'{k}={v}' for k, v in cleaned_params.items()])
     url = parsed._replace(query=cleaned_query).geturl()
 
     return url if has_params(url) else None
