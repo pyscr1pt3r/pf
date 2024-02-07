@@ -40,6 +40,7 @@ def clean_url(url):
     return parsed.geturl()
 
 
+# todo://group params by path eg: https://a.b.com/path1?a=1&b=2&c=3 ...
 def clean_params(url):
     parsed = urlparse(url)
     query_params = parse_qs(parsed.query)
@@ -74,6 +75,7 @@ def main():
             continue
         urls.add(url)
 
+    urls = sorted(list(urls))
     for url in urls:
         sys.stdout.write(f'{url}\n')
 
